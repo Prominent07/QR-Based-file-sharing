@@ -4,8 +4,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-.body {
-  padding-bottom: 60px; /* Add bottom padding for footer on mobile */
 }
 
 :root {
@@ -254,7 +252,6 @@ header img {
 
 /* Footer --------------------------------------------------------------- */
 footer {
-.info {
   position: fixed;
   left: 0;
   right: 0;
@@ -270,56 +267,6 @@ footer {
   text-align: center;
   z-index: 10;
   border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-info {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02)
-  );
-  color: var(--muted);
-  padding: 12px 0;
-  text-align: center;
-  z-index: 10;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.info {
-  position: absolute;
-    bottom: 0;
-    width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02)
-  );
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px;
-}
-
-.btn2 {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: var(--muted);
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 200ms ease;
-}
-
-.btn2:hover {
-  background: rgba(124, 92, 255, 0.2);
-  border-color: var(--accent);
-  color: #fff;
-  transform: translateY(-2px);
 }
 
 /* Responsive ---------------------------------------------------------- */
@@ -331,22 +278,16 @@ info {
   .scan {
     flex: 1 1 360px;
   }
-  z-index: 1000; /* Ensure it is above other content */
 }
 
 @media (max-width: 768px) {
   .mainContent {
     flex-direction: column;
     gap: 12px;
-    padding-bottom: 80px; /* Adjust mainContent padding for mobile */
   }
   .scan,
   .instructions {
     width: 100%;
-  .info-buttons {
-    display: flex;
-    flex-direction: column; /* Stack info buttons vertically */
-    align-items: center;
   }
 }
 
@@ -365,4 +306,37 @@ info {
     font-size: 14px;
   }
 }
+
+/* Info section (footer-like) ------------------------------------------- */
+.info {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0.02)
+  );
+  color: var(--muted);
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.btn2 {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.btn2:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
