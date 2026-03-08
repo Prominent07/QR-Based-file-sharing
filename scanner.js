@@ -1,14 +1,17 @@
 const startBtn = document.getElementById("startScan");
+const stopBtn = document.getElementById("stopScan");
 const resultBox = document.getElementById("result");
 const statusText = document.getElementById("status-text");
 const fileDownloadArea = document.getElementById("file-download-area");
 const radioButtons = document.getElementsByName('scanMode');
 const fileInstruction = document.getElementById('file-instruction');
+const qrReader = document.getElementById("qr-reader");
 
-let qrCodeObj = null; // Store the Html5Qrcode instance
-let currentMode = 'text'; // 'text' or 'file'
-let fileStep = 0; // 0=idle, 1=waitingForName, 2=waitingForContent
+let qrCodeObj = null; 
+let currentMode = 'text'; 
+let fileStep = 0; 
 let tempFilename = '';
+let isScanning = false; 
 
 // Toggle instructions based on mode
 radioButtons.forEach(radio => {
@@ -19,52 +22,71 @@ radioButtons.forEach(radio => {
             startBtn.innerText = "Scan File (Part 1)";
         } else {
             fileInstruction.style.display = 'none';
-            startBtn.innerText = "Scan Text";
+            startBtn.innerText = "Start Scan";
         }
+        
+        // If user switches modes while scanning, stop the scanner to reset state
+        if(isScanning) stopScanner();
     });
 });
 
 startBtn.addEventListener("click", () => {
-    // Reset previous results
+    if (isScanning) return;
+
+    // Reset UI
     resultBox.innerText = "";
     fileDownloadArea.innerHTML = "";
     fileDownloadArea.style.display = 'none';
+    qrReader.style.display = "block"; // Show camera container
     
-    // Determine state based on mode
     if (currentMode === 'file') {
-        fileStep = 1; // Start looking for filename
+        fileStep = 1;
         statusText.innerText = "Step 1: Scan the FILENAME QR code";
-        statusText.style.color = "blue";
+        statusText.style.color = "#33c3ff"; // Blueish accent
     } else {
         statusText.innerText = "Scanning for Text...";
-        statusText.style.color = "black";
+        statusText.style.color = "#33c3ff";
     }
 
-    // Initialize scanner if not already done (or reuse logic)
-    // We recreate it here to ensure clean state
-    if (qrCodeObj) { 
-        // If already running, stop it first (edge case)
-        try { qrCodeObj.stop(); } catch(e){}
-    }
+    // Toggle buttons
+    startBtn.style.display = "none";
+    stopBtn.style.display = "flex";
+    isScanning = true;
 
     qrCodeObj = new Html5Qrcode("qr-reader");
 
+    // Dynamically calculate QR box size based on screen width
+    const qrboxFunction = function(viewfinderWidth, viewfinderHeight) {
+        let minEdgePercentage = 0.7; // 70% of the screen
+        let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+        let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
+        return { width: qrboxSize, height: qrboxSize };
+    }
+
     qrCodeObj.start(
-        { facingMode: "environment" },
+        { facingMode: "environment" }, // Prioritize back camera
         {
             fps: 10,
-            qrbox: 250
+            qrbox: qrboxFunction
         },
         (decodedText) => {
             handleScanSuccess(decodedText);
         },
         (error) => {
-            // ignore errors
+            // Background scanning errors are common (e.g., no QR in frame). Ignore them.
         }
-    );
-    
-    // Hide button while scanning
-    startBtn.style.display = "none";
+    ).catch(err => {
+        console.error("Camera access error:", err);
+        statusText.innerText = "Camera access failed. Please grant permissions.";
+        statusText.style.color = "#ef4444"; // Red
+        stopScanner();
+    });
+});
+
+stopBtn.addEventListener("click", () => {
+    statusText.innerText = "Scan Cancelled.";
+    statusText.style.color = "var(--muted)";
+    stopScanner();
 });
 
 function handleScanSuccess(text) {
@@ -72,62 +94,72 @@ function handleScanSuccess(text) {
         // --- TEXT MODE ---
         resultBox.innerText = "Scanned: " + text;
         statusText.innerText = "Scan Complete";
+        statusText.style.color = "#10b981"; // Green
+        triggerHaptic();
         stopScanner();
     } 
     else if (currentMode === 'file') {
         // --- FILE MODE ---
-        
         if (fileStep === 1) {
             // Captured Filename
             tempFilename = text;
             fileStep = 2;
             
-            // UX: Alert user to switch QRs. This also creates a natural pause 
-            // so we don't accidentally scan the same QR twice instantly.
-            alert(`Filename identified: "${tempFilename}"\n\nNow please scan the DATA QR code.`);
+            triggerHaptic();
             
+            // Replaced blocky alert() with UI update so video stream doesn't freeze
             statusText.innerText = `Step 2: Scan DATA for "${tempFilename}"`;
-            statusText.style.color = "red";
-            
-            // Scanner continues running...
+            statusText.style.color = "#f59e0b"; // Orange/Yellow to indicate change
         } 
         else if (fileStep === 2) {
             // Captured Content
-            // Prevent scanning the filename as content if user didn't move
             if (text === tempFilename) {
-                console.log("Ignored duplicate scan of filename");
+                // Ignore if the camera is still reading the first QR code
                 return; 
             }
 
+            triggerHaptic();
             createFileDownload(tempFilename, text);
             statusText.innerText = "File Reconstructed Successfully!";
-            statusText.style.color = "green";
+            statusText.style.color = "#10b981"; // Green
             stopScanner();
         }
     }
 }
 
 function stopScanner() {
-    if (qrCodeObj) {
+    if (qrCodeObj && isScanning) {
         qrCodeObj.stop().then(() => {
             qrCodeObj.clear();
-            startBtn.style.display = "flex"; // Show start button again
-            // Update button text for next run
-            if(currentMode === 'file') startBtn.innerText = "Scan File (Part 1)";
+            resetUI();
         }).catch(err => {
             console.error("Failed to stop scanner", err);
+            resetUI(); // Force UI reset even if stop fails
         });
+    } else {
+        resetUI();
+    }
+}
+
+function resetUI() {
+    isScanning = false;
+    qrReader.style.display = "none";
+    stopBtn.style.display = "none";
+    startBtn.style.display = "flex";
+    
+    if(currentMode === 'file') {
+        startBtn.innerText = "Scan File (Part 1)";
+    } else {
+        startBtn.innerText = "Start Scan";
     }
 }
 
 function createFileDownload(filename, content) {
-    resultBox.innerText = `File "${filename}" received.`;
+    resultBox.innerText = `File "${filename}" ready for download.`;
     
-    // Create a blob from the content
     const blob = new Blob([content], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     
-    // Create download link
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
@@ -137,4 +169,11 @@ function createFileDownload(filename, content) {
     fileDownloadArea.innerHTML = "";
     fileDownloadArea.appendChild(link);
     fileDownloadArea.style.display = "block";
+}
+
+// Small helper to trigger vibration on mobile devices for better UX
+function triggerHaptic() {
+    if (navigator.vibrate) {
+        navigator.vibrate(200);
+    }
 }

@@ -9,7 +9,7 @@
 <body>
 <header>
     <div class="header-left">
-        <img src="logo.svg" alt="logo">
+        <img src="logo.svg" alt="logo" onerror="this.style.display='none'">
         <p class="name">String-Sender</p>
     </div>
     <button class="home-btn" onclick="window.location.href='index.html'">Home</button>
@@ -29,6 +29,7 @@
                 </div>
 
                 <button class="scanner" id="startScan">Start Scan</button>
+                <button class="scanner" id="stopScan" style="display: none;">Stop Scan</button>
                 
                 <p id="status-text">Ready</p>
                 <div id="qr-reader"></div>
@@ -44,7 +45,7 @@
                 <ol>
                     <li>Select <strong>Text Mode</strong> for simple strings.</li>
                     <li>Select <strong>File Mode</strong> to receive a file.</li>
-                    <li id="file-instruction" style="display:none; color: #2b6cb0;">
+                    <li id="file-instruction" style="display:none; color: #33c3ff;">
                         <strong>For Files:</strong> Scan the <em>Filename</em> QR first, then scan the <em>Content</em> QR.
                     </li>
                     <li>Ensure adequate lighting.</li>
@@ -52,10 +53,11 @@
             </div>
         </div>
         <div class="info">
-      <a href="https://github.com/Prominent07/QR-Based-file-sharing"><button class="btn2">About us</button></a>
-      <button class="btn2" onclick="window.location.href='mailto:gamerhatela77@gmail.com?subject=Hello'">Contact Us</button>
-    </div>
+          <a href="https://github.com/Prominent07/QR-Based-file-sharing"><button class="btn2">About us</button></a>
+          <button class="btn2" onclick="window.location.href='mailto:gamerhatela77@gmail.com?subject=Hello'">Contact Us</button>
+        </div>
     </main>
+    
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="scanner.js"></script>
 </body>

@@ -1,5 +1,4 @@
 /* Scanner page CSS - themed to match homePage.css */
-/* Reset & base ---------------------------------------------------------- */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,25 +12,16 @@
   --accent-2: #33c3ff;
   --muted: rgba(255, 255, 255, 0.75);
   --glass-blur: 8px;
-  --footer-height: 72px;
 }
 
 html,
 body {
   height: 100%;
-  font-family:
-    "Nunito",
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial;
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
   color: var(--muted);
 }
 
-/* Header --------------------------------------------------------------- */
 header {
   display: flex;
   align-items: center;
@@ -41,6 +31,7 @@ header {
   width: 100%;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
+
 header img {
   position: absolute;
   left: 1rem;
@@ -52,11 +43,13 @@ header img {
   padding: 6px;
   box-shadow: 0 6px 20px rgba(12, 14, 20, 0.6);
 }
+
 .name {
   font-size: clamp(22px, 5vw, 28px);
   font-weight: 800;
   color: #fff;
 }
+
 .home-btn {
   position: absolute;
   right: 1rem;
@@ -68,12 +61,12 @@ header img {
   cursor: pointer;
   transition: all 200ms ease;
 }
+
 .home-btn:hover {
   background: #fff;
   color: var(--bg-1);
 }
 
-/* Main content area --------------------------------------------------- */
 .mainContent {
   display: flex;
   gap: 2rem;
@@ -85,19 +78,14 @@ header img {
   flex-wrap: wrap;
 }
 
-/* Scanner section */
 .scan {
   flex: 1 1 420px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02)
-  );
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
   border-radius: 12px;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -105,14 +93,14 @@ header img {
   backdrop-filter: blur(var(--glass-blur));
 }
 
-/* Mode selection ---------------------------------------------------- */
 .mode-selection {
   display: flex;
-  gap: 12px;
-  background: transparent;
-  padding: 12px;
+  gap: 16px;
+  background: rgba(0,0,0,0.2);
+  padding: 12px 20px;
   border-radius: 20px;
 }
+
 .mode-selection label {
   cursor: pointer;
   display: flex;
@@ -121,60 +109,38 @@ header img {
   color: var(--muted);
   font-weight: 600;
 }
-.mode-selection input[type="radio"] {
-  cursor: pointer;
+
+/* Updated Status Text for Better Visibility */
+#status-text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  min-height: 24px;
+  transition: color 0.3s ease;
 }
 
-/* Scanner display --------------------------------------------------- */
-#scanner-container,
-#video-preview {
+/* Specific Fixes for the html5-qrcode video wrapper */
+#qr-reader {
   width: 100%;
-  max-width: 500px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  display: none; /* Hidden by default */
   background: #000;
 }
 
-/* Result display ---------------------------------------------------- */
-.result {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02)
-  );
+#qr-reader video {
+  width: 100% !important;
   border-radius: 12px;
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  max-width: 100%;
-  word-break: break-all;
-  color: rgba(255, 255, 255, 0.95);
+  object-fit: cover;
 }
 
-/* Buttons ------------------------------------------------------------ */
-.scan-btn,
-.home {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.95),
-    rgba(255, 255, 255, 0.88)
-  );
-  color: #07203a;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
-}
-.scan-btn:hover,
-.home:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(8, 12, 20, 0.5);
+/* Hide the default link library leaves behind sometimes */
+#qr-reader a {
+    display: none !important;
 }
 
-/* Start Scan button - circular */
 .scanner {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #fff;
@@ -185,21 +151,40 @@ header img {
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
+  transition: transform 200ms ease, box-shadow 200ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   box-shadow: 0 8px 30px rgba(124, 92, 255, 0.4);
 }
+
 .scanner:hover {
-  transform: scale(1.08);
+  transform: scale(1.05);
   box-shadow: 0 12px 40px rgba(124, 92, 255, 0.6);
 }
 
-/* Download button --------------------------------------------------- */
+/* Stop Scan Button Styles */
+#stopScan {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4);
+}
+
+#stopScan:hover {
+  box-shadow: 0 12px 40px rgba(239, 68, 68, 0.6);
+}
+
+#result-container {
+    text-align: center;
+    width: 100%;
+}
+
+#result {
+    word-break: break-all;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 10px;
+}
+
 .download-btn {
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   color: #fff;
@@ -208,28 +193,20 @@ header img {
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-}
-.download-btn:hover {
-  transform: translateY(-2px);
+  text-decoration: none;
+  display: inline-block;
 }
 
-/* Instructions section --------------------------------------------- */
 .instruction {
   flex: 1 1 340px;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 36, 0.95),
-    rgba(11, 18, 32, 0.95)
-  );
+  background: linear-gradient(180deg, rgba(15, 23, 36, 0.95), rgba(11, 18, 32, 0.95));
   border-radius: 16px;
   padding: 1.75rem;
-  
-  box-shadow:
-    0 12px 40px rgba(3, 6, 18, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px rgba(3, 6, 18, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(var(--glass-blur));
   color: rgba(255, 255, 255, 0.95);
 }
+
 .instruction p {
   font-weight: 800;
   color: #fff;
@@ -240,92 +217,31 @@ header img {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.instruction ol,
-.instruction ul {
+
+.instruction ol {
   padding-left: 20px;
   line-height: 1.8;
 }
+
 .instruction li {
   margin-bottom: 10px;
   color: rgba(255, 255, 255, 0.92);
 }
 
-/* Footer --------------------------------------------------------------- */
-footer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02)
-  );
-  color: var(--muted);
-  padding: 12px 0;
-  text-align: center;
-  z-index: 10;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-/* Responsive ---------------------------------------------------------- */
-@media (max-width: 1024px) {
-  .mainContent {
-    gap: 1.5rem;
-    padding: 1.5rem 1rem;
-  }
-  .scan {
-    flex: 1 1 360px;
-  }
-}
-
-@media (max-width: 768px) {
-  .mainContent {
-    flex-direction: column;
-    gap: 12px;
-  }
-  .scan,
-  .instructions {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  header {
-    padding: 12px 1rem;
-  }
-  .name {
-    font-size: 18px;
-  }
-  .mainContent {
-    padding: 12px 8px;
-  }
-  .scan-btn {
-    padding: 8px 14px;
-    font-size: 14px;
-  }
-}
-
-/* Info section (footer-like) ------------------------------------------- */
 .info {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.02)
-  );
-  color: var(--muted);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
   padding: 12px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
   z-index: 10;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
 .btn2 {
@@ -339,4 +255,15 @@ footer {
 
 .btn2:hover {
   background: rgba(255, 255, 255, 0.05);
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    flex-direction: column;
+    align-items: center;
+  }
+  .scan, .instruction {
+    width: 100%;
+    max-width: 500px;
+  }
 }
