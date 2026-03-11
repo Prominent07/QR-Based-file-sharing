@@ -38,7 +38,7 @@ function generateQRDataUrl(data) {
         qrContainer.innerHTML = '';
 
         if(data.length > 2500) {
-            reject("Data is too large for a QR code! Please reduce text or choose a smaller file.");
+            reject("Data is too large for a QR code! Please reduce text or choose a smaller file. Maximum file size is 2KB.");
             return;
         }
 
